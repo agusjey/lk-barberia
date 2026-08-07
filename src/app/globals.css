@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* Estilos generales para el modo oscuro del DatePicker */
+.dark-calendar {
+  background-color: #171717 !important;
+  border: 1px solid #262626 !important;
+  color: #a3a3a3 !important;
+  font-family: inherit;
+}
+
+.dark-calendar .react-datepicker__header {
+  background-color: #171717 !important;
+  border-bottom: 1px solid #262626 !important;
+}
+
+.dark-calendar .react-datepicker__current-month,
+.dark-calendar .react-datepicker__day-name {
+  color: #fafafa !important;
+}
+
+.dark-calendar .react-datepicker__day {
+  color: #fafafa !important;
+}
+
+.dark-calendar .react-datepicker__day:hover {
+  background-color: #eab308 !important;
+  color: #171717 !important;
+  border-radius: 0.375rem;
+}
+
+.dark-calendar .react-datepicker__day--selected,
+.dark-calendar .react-datepicker__day--keyboard-selected {
+  background-color: #eab308 !important;
+  color: #171717 !important;
+  border-radius: 0.375rem;
+}
+
+.dark-calendar .react-datepicker__day--disabled {
+  color: #525252 !important;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* ESTA ES LA CLASE QUE PINTA LOS FERIADOS DE ROJO */
+.dark-calendar .holiday-day {
+  color: #ef4444 !important;
+  font-weight: bold !important;
+}
+
+.dark-calendar .react-datepicker__navigation-icon::before {
+  border-color: #a3a3a3 !important;
+}
+
+.dark-calendar .react-datepicker__navigation:hover * {
+  border-color: #fafafa !important;
+}
