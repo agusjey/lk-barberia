@@ -36,7 +36,7 @@ export default function ContactSection() {
             followMouse={true}
             proximity={300}
             autoAnimate={false}
-            onClick={() => window.open("https://instagram.com/lkbarber_ss", "_blank")}
+            onClick={() => window.open("https://www.instagram.com/lkbarber_ss/", "_blank")}
           >
             <div className="flex items-center justify-between w-full py-3 px-2 h-full group">
               <div className="flex items-center gap-4">
