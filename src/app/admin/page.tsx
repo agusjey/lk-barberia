@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   }, [selectedDate, isAuthenticated]);
 
   // Cambiar estado en Supabase
-  const toggleStatus = async (id: number, currentStatus: string) => {
+  const toggleStatus = async (id: string, currentStatus: string) => {
     const nextStatus = currentStatus === "Pendiente" ? "Completado" : "Pendiente";
     
     const { error } = await supabase
@@ -43,9 +43,25 @@ export default function AdminDashboard() {
       .eq("id", id);
 
     if (!error) {
-      fetchAppointments(); // Refrescar lista
+      fetchAppointments();
     } else {
       alert("Error al actualizar el turno");
+    }
+  };
+
+  // 🗑️ NUEVO: Eliminar turno de la base de datos
+  const deleteAppointment = async (id: string, clientName: string) => {
+    if (confirm(`¿Estás seguro de eliminar el turno de ${clientName}?`)) {
+      const { error } = await supabase
+        .from("bookings")
+        .delete()
+        .eq("id", id);
+
+      if (!error) {
+        fetchAppointments();
+      } else {
+        alert("Error al eliminar el turno");
+      }
     }
   };
 
@@ -66,7 +82,6 @@ export default function AdminDashboard() {
           <form 
             onSubmit={(e) => {
               e.preventDefault();
-              // Cambiá "tu_password_secreta" por la contraseña que vos quieras usar
               if (passwordInput === "laurik") {
                 setIsAuthenticated(true);
               } else {
@@ -109,7 +124,7 @@ export default function AdminDashboard() {
           />
           <button
             onClick={() => setIsAuthenticated(false)}
-            className="text-xs bg-neutral-900 border border-neutral-800 hover:border-red-500/50 hover:text-red-400 px-3 py-1.5 rounded-xl transition"
+            className="text-xs bg-neutral-900 border border-neutral-800 hover:border-red-500/50 hover:text-red-400 px-3 py-1.5 rounded-xl transition cursor-pointer"
           >
             Cerrar Sesión
           </button>
@@ -120,7 +135,7 @@ export default function AdminDashboard() {
         {/* ESTADÍSTICAS REALES */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 shadow-lg">
-            <span className="text-xs text-gray-400 uppercase tracking-wide">Total Turnos</span>
+            <span className="text-xs text-gray-400 uppercase tracking-wide">Total Turnos (Día)</span>
             <p className="text-3xl font-bold mt-2">{appointments.length}</p>
           </div>
           <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 shadow-lg">
@@ -128,34 +143,60 @@ export default function AdminDashboard() {
             <p className="text-3xl font-bold text-yellow-500 mt-2">{pendingCount}</p>
           </div>
           <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 shadow-lg">
-            <span className="text-xs text-green-400 uppercase tracking-wide">Recaudación</span>
+            <span className="text-xs text-green-400 uppercase tracking-wide">Recaudación Estimada</span>
             <p className="text-3xl font-bold text-green-400 mt-2">${totalMoney.toLocaleString("es-AR")}</p>
           </div>
         </div>
 
         {/* LISTA DINÁMICA */}
         <div className="space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            Turnos para el día {selectedDate}
+          </h2>
+
           {loading ? (
             <p className="text-center text-gray-500 py-10">Cargando turnos...</p>
           ) : appointments.length > 0 ? (
             appointments.map((app) => (
-              <div key={app.id} className="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-6 flex justify-between items-center shadow-md">
+              <div key={app.id} className="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-md">
                 <div className="space-y-1">
-                  <h3 className="font-bold text-base">{app.name}</h3>
-                  <p className="text-xs text-gray-400">{app.service} • <span className="text-yellow-500 font-semibold">{app.time} hs</span> • Tel: {app.phone}</p>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-base text-white">{app.name}</h3>
+                    <span className="text-xs font-mono bg-neutral-800 px-2.5 py-0.5 rounded text-yellow-400 border border-neutral-700">
+                      {app.time} hs
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    {app.service} • <span className="text-green-400 font-semibold">${app.price?.toLocaleString("es-AR")}</span> • Tel: {app.phone}
+                  </p>
                 </div>
-                <button 
-                  onClick={() => toggleStatus(app.id, app.status)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                    app.status === "Completado" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                  }`}
-                >
-                  {app.status}
-                </button>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <button 
+                    onClick={() => toggleStatus(app.id, app.status)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+                      app.status === "Completado" 
+                        ? "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30" 
+                        : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30"
+                    }`}
+                  >
+                    {app.status}
+                  </button>
+
+                  <button 
+                    onClick={() => deleteAppointment(app.id, app.name)}
+                    className="p-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl transition cursor-pointer text-xs"
+                    title="Eliminar turno"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-500 py-10 bg-neutral-900/30 border border-neutral-900 rounded-2xl">No hay turnos para esta fecha.</p>
+            <p className="text-center text-gray-500 py-10 bg-neutral-900/30 border border-neutral-900 rounded-2xl">
+              No hay turnos agendados para esta fecha.
+            </p>
           )}
         </div>
       </main>

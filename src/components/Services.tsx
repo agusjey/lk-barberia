@@ -2,39 +2,39 @@
 
 const services = [
   {
-    icon: "✂️",
+    category: "Corte",
     title: "Corte Tradicional / Urbano",
-    description: "Asesoramiento de imagen, degrades (fade), perfilado de contornos y peinado con producto.",
-    price: "$$$",
+    description: "Asesoramiento de imagen, degrades (fade), perfilado de contornos y peinado con producto de alta fijación.",
+    price: "$17.000",
   },
   {
-    icon: "🪒",
+    category: "Barba",
     title: "Barba & Perfilado",
-    description: "Diseño de barba, rebajado, perfilado a navaja tradicional y toalla caliente para hidratación.",
-    price: "$$$",
+    description: "Diseño de barba, rebajado, perfilado a navaja tradicional y toalla caliente para hidratación y relax.",
+    price: "$7.000",
   },
   {
-    icon: "🔥",
+    category: "Combo Destacado",
     title: "Combo Completo (Corte + Barba)",
     description: "Servicio premium integral. Cambio de look completo con los mejores cuidados para tu piel y cabello.",
-    price: "$$$",
+    price: "$22.000",
   },
 ];
 
 export default function Services() {
   return (
-    <section id="servicios" className="py-20 bg-black text-white px-4 border-t border-neutral-900">
-      <div className="max-w-5xl mx-auto space-y-12">
+    <section id="servicios" className="py-24 bg-black text-white px-4 border-t border-neutral-900">
+      <div className="max-w-6xl mx-auto space-y-16">
         
         {/* ENCABEZADO */}
-        <div className="text-center space-y-3">
-          <span className="text-xs font-semibold uppercase tracking-widest text-yellow-500">
-            Nuestros Servicios
+        <div className="text-center space-y-4">
+          <span className="text-xs font-mono uppercase tracking-[0.3em] text-yellow-500">
+            // Experiencia y Estilo
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white uppercase tracking-wide">
-            Especialidades de la Casa
+          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">
+            Nuestros Servicios
           </h2>
-          <div className="w-12 h-1 bg-yellow-500 mx-auto rounded-full" />
+          <div className="w-16 h-0.5 bg-yellow-500 mx-auto" />
         </div>
 
         {/* GRILLA DE SERVICIOS */}
@@ -42,28 +42,35 @@ export default function Services() {
           {services.map((item, index) => (
             <div
               key={index}
-              className="group relative bg-neutral-950 border border-neutral-800/80 rounded-2xl p-6 hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-yellow-500/5 flex flex-col justify-between"
+              className="group relative bg-[#0a0a0a] border border-neutral-800/80 rounded-2xl p-8 hover:border-yellow-500/40 transition-all duration-300 flex flex-col justify-between"
             >
-              <div className="space-y-4">
-                <div className="w-12 h-12 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 group-hover:border-yellow-500/40 transition duration-300">
-                  {item.icon}
+              <div>
+                {/* ETIQUETA Y DURACIÓN */}
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded">
+                    {item.category}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-yellow-500 transition">
-                  {item.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {item.description}
-                </p>
+
+                {/* TÍTULO Y DESCRIPCIÓN */}
+                <div className="space-y-3 mb-8">
+                  <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-neutral-400 text-sm leading-relaxed font-light">
+                    {item.description}
+                  </p>
+                </div>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-neutral-900 flex justify-between items-center">
-                <span className="text-xs text-gray-500 font-medium">Servicio Profesional</span>
-                <a
-                  href="#reservar"
-                  className="text-xs font-bold text-yellow-500 group-hover:translate-x-1 transition flex items-center gap-1"
-                >
-                  Reservar →
-                </a>
+              {/* PRECIO (SIN BOTÓN) */}
+              <div className="pt-6 border-t border-neutral-900 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-neutral-400 block">Precio</span>
+                  <span className="text-2xl font-black text-white tracking-tight">
+                    {item.price}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
